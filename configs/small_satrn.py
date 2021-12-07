@@ -5,11 +5,10 @@ size = (32, 100)
 mean, std = 0.5, 0.5
 
 sensitive = True
-character = '0123456789abcdefghijklmnopq' \
-            'rstuvwxyzABCDEFGHIJKLMNOPQRS' \
-            'TUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'  # need character
+character = 'aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ '  # need character
 test_sensitive = False
-test_character = '0123456789abcdefghijklmnopqrstuvwxyz'
+#test_character = '0123456789abcdefghijklmnopqrstuvwxyz'
+test_character = 'aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ '
 batch_max_length = 25
 
 dropout = 0.1
@@ -207,14 +206,15 @@ data_root = '../../../../dataset/str/data/data_lmdb_release/'
 ###############################################################################
 # 3. test
 
-batch_size = 256
+batch_size = 32
 
 # data
-test_root = data_root + 'evaluation/'
-test_folder_names = ['CUTE80', 'IC03_867', 'IC13_1015', 'IC15_2077',
-                     'IIIT5k_3000', 'SVT', 'SVTP']
-test_dataset = [dict(type='LmdbDataset', root=test_root + f_name,
-                     **test_dataset_params) for f_name in test_folder_names]
+test_root = '/content/vedastr/data/data_lmdb_release/evalution'
+# test_root = data_root + 'evaluation/'
+# test_folder_names = ['CUTE80', 'IC03_867', 'IC13_1015', 'IC15_2077',
+#                      'IIIT5k_3000', 'SVT', 'SVTP']
+test_dataset = [dict(type='LmdbDataset', root=test_root,
+                     **test_dataset_params)]
 
 test = dict(
     data=dict(
@@ -245,19 +245,22 @@ test = dict(
 root_workdir = 'workdir'  # save directory
 
 # data
-train_root = data_root + 'training/'
+#train_root = data_root + 'training/'
+train_root = '/content/vedastr/data/data_lmdb_release/training/'
 # MJ dataset
-train_root_mj = train_root + 'MJ/'
-mj_folder_names = ['/MJ_test', 'MJ_valid', 'MJ_train']
-# ST dataset
-train_root_st = train_root + 'ST/'
+# train_root_mj = train_root + 'MJ/'
+# mj_folder_names = ['/MJ_test', 'MJ_valid', 'MJ_train']
+# # ST dataset
+# train_root_st = train_root + 'ST/'
 
-train_dataset_mj = [dict(type='LmdbDataset', root=train_root_mj + folder_name)
-                    for folder_name in mj_folder_names]
-train_dataset_st = [dict(type='LmdbDataset', root=train_root_st)]
-
-# valid
-valid_root = data_root + 'validation/'
+# train_dataset_mj = [dict(type='LmdbDataset', root=train_root_mj + folder_name)
+#                     for folder_name in mj_folder_names]
+# train_dataset_st = [dict(type='LmdbDataset', root=train_root_st)]
+# train_dataset = [dict(type='LmdbDataset', root=train_root,
+#                      **train_dataset_params)]
+train_dataset = [dict(type='LmdbDataset', root=train_root)]
+# # valid
+valid_root = '/content/vedastr/data/data_lmdb_release/evalution'
 valid_dataset = dict(type='LmdbDataset', root=valid_root, **test_dataset_params)
 
 train_transforms = [
@@ -291,14 +294,14 @@ train = dict(
                 datasets=[
                     dict(
                         type='ConcatDatasets',
-                        datasets=train_dataset_mj,
+                        datasets=train_dataset,
                     ),
                     dict(
                         type='ConcatDatasets',
-                        datasets=train_dataset_st,
+                        datasets=train_dataset,
                     )
                 ],
-                batch_ratio=[0.5, 0.5],
+                batch_ratio=[0.9, 0.1],
                 **dataset_params,
             ),
             transform=train_transforms,
